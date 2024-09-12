@@ -230,3 +230,53 @@ creditTab:AddButton({
       print("Discord link copied to clipboard")
   end    
 })
+local coinTab= Window:MakeTab({Name="Coins",Icon="rbxassetid://4483345998",PremiumOnly=false});
+
+-- Function to teleport to spawned coins
+local function teleportToCoins()
+    local rootpart = game.Players.LocalPlayer.Character.HumanoidRootPart
+    while true do
+        if not autoFarmCoins then
+            break
+        end
+
+        local coins = workspace.spawnedCoins.Valley:GetChildren()
+        local nearestCoin = nil
+        local nearestDistance = math.huge
+
+        for _, coin in pairs(coins) do
+            if coin:IsA("BasePart") then
+                local distance = (rootpart.Position - coin.Position).Magnitude
+                if distance < nearestDistance then
+                    nearestDistance = distance
+                    nearestCoin = coin
+                end
+            end
+        end
+
+        if nearestCoin then
+            rootpart.CFrame = nearestCoin.CFrame
+        end
+
+        -- Adjusted wait time for faster updates
+        wait(0.2)
+    end
+end
+
+coinTab:AddToggle({
+    Name = "Auto Farm Coins",
+    Default = false,
+    Callback = function(value)
+        autoFarmCoins = value
+        if autoFarmCoins then
+            -- Start the teleportToCoins function when the toggle is enabled
+            teleportToCoinsThread = spawn(teleportToCoins)
+        else
+            -- Stop the teleportToCoins function when the toggle is disabled
+            if teleportToCoinsThread then
+                teleportToCoinsThread:Kill()
+                teleportToCoinsThread = nil
+            end
+        end
+    end
+})
