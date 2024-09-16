@@ -130,14 +130,13 @@ end})
 
 -- Chest
 serectTab:AddButton({Name="Collect All Chests", Callback=function()
-	local checkChest = {"Soul Fusion Chest","Chaos Legends Chest","Skystorm Masters Chest","Ultra Ninjistu Chest","Golden Zen Chest",
-	"Wonder chest","Midnight Shadow Chest","Ancient Chest","Thunder Chest","Sahara Chest","Eternal Chest","Legends Chest","Mythical Chest",
-	"Magam Chest","Enchanted Chest"}
-
-	for _, checkChest in pairs(checkChest) do
-		local args = { [1] = checkChest };
-		game:GetService("ReplicatedStorage").rEvents.checkChestRemote:InvokeServer(unpack(args));
-	end
+	for i,v in pairs(game:GetService("Workspace").Hoops:GetChildren()) do
+            if v:IsA("MeshPart") then
+                v.touchPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                wait(0.25)
+                v.touchPart.CFrame = CFrame.new(0,0,0)
+            end
+        end
 end})
 
 -- Unlock All Islands
